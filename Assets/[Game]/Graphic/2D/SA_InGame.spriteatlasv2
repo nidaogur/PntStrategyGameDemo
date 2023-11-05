@@ -7,13 +7,51 @@ SpriteAtlasAsset:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  serializedVersion: 2
   m_MasterAtlas: {fileID: 0}
   m_ImporterData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 0
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
     packables:
     - {fileID: 2800000, guid: 3907685993891e0418d58cc11b82e82d, type: 3}
     - {fileID: 2800000, guid: 99338076907ae9b4d98b6eecadcaa47d, type: 3}
     - {fileID: 2800000, guid: 405edb8f89174f64f8d0f357e38a5141, type: 3}
     - {fileID: 2800000, guid: 5b4cd17d2eb41924dbe01b8af76b0f02, type: 3}
     - {fileID: 2800000, guid: 4155c14ac63ec7b4c8f2710b613065fe, type: 3}
+    - {fileID: 2800000, guid: 8a4abad84430bdb42ab8a1e47f428ab1, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
   m_IsVariant: 0
