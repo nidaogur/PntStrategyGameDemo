@@ -6,6 +6,7 @@ using _Game_.Scripts.Manager;
 using _Game_.Scripts.SO;
 using _Game_.Scripts.Utilities;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace _Game_.Scripts.GameBoard.Units
 {
@@ -14,6 +15,7 @@ namespace _Game_.Scripts.GameBoard.Units
         [SerializeField] private ProductInformation information;
         [SerializeField] private GameObject orderLine;
         [SerializeField] private FloatVariable health;
+        [SerializeField] private Image hpBar;
         public bool IsSelect { get; set; }
         public List<GridCell> occupiedCells = new List<GridCell>();
         public string poolTag;
@@ -38,6 +40,7 @@ namespace _Game_.Scripts.GameBoard.Units
         {
             Health=health.value;
             IsDead = false;
+            HpBar();
         }
 
         public virtual void Selected()
@@ -73,6 +76,7 @@ namespace _Game_.Scripts.GameBoard.Units
         {
             Health -= damage;
             health = Health;
+            HpBar();
             if (Health <= 0 && !IsDead)
             {
                 Death();
@@ -85,5 +89,11 @@ namespace _Game_.Scripts.GameBoard.Units
             GenericObjectPool.Instance.ReleasePooledObject(poolTag,this);
             LeaveCell();
         }
+
+        public void HpBar()
+        {
+            hpBar.fillAmount = Health/health.value;
+        }
+
     }
 }
