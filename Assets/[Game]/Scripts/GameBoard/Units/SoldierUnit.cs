@@ -32,7 +32,7 @@ namespace _Game_.Scripts.GameBoard.Units
             InputManager.Instance.OnRightClick -= MoveToPosition;
         }
 
-        public override void Init()
+        protected override void Init()
         {
             base.Init();
             Damage = damage.value;
@@ -151,9 +151,11 @@ namespace _Game_.Scripts.GameBoard.Units
             float remainingHealth = 0;
             do
             {
+                hitBase.UpdateHpBar();
                 AttackAnimation();
                 hitBase.TakeDamage(Damage, out remainingHealth);
                 yield return _attackDuration;
+                hitBase.HpBarEnable(false);
             } while (remainingHealth > 0 && hitBase != null);
         }
 

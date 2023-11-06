@@ -1,4 +1,5 @@
 using System;
+using _Game_.Scripts.GameBoard.Grid;
 using _Game_.Scripts.GameBoard.Interface;
 using _Game_.Scripts.Utilities;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace _Game_.Scripts.Manager
         }
         private void RaycastFromMousePosition()
         {
+            EventManager.Instance.SelectBuilding?.Invoke(false);
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
 
