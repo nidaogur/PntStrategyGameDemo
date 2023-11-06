@@ -14,15 +14,16 @@ namespace _Game_.Scripts.GameBoard.Units
 
         private void Update()
         {
+            if(_unitToPlace==null) return;
             GridCell gridCell = FindNearestCell(Input.mousePosition);
 
             if (gridCell != null)
             {
                 HighlightCells(gridCell);
 
-                if (Input.GetMouseButtonDown(0) && _unitToPlace != null)
+                if (Input.GetMouseButtonDown(0))
                 {
-                    TryPlaceBuilding(gridCell);
+                    TryPlaceBuilding(gridCell, _unitToPlace);
                 }
             }
         }
@@ -42,12 +43,12 @@ namespace _Game_.Scripts.GameBoard.Units
 
             return nearestCell;
         }
-        private void TryPlaceBuilding(GridCell gridCell)
+        private void TryPlaceBuilding(GridCell gridCell, Unit unitPlace)
         {
-            if (CanPlaceBuilding(gridCell, _unitToPlace.width, _unitToPlace.height))
+            if (CanPlaceBuilding(gridCell, unitPlace.width, unitPlace.height))
             {
                 var temp=InstantiateBuilding(gridCell);
-                OccupyCells(temp,gridCell, _unitToPlace.width, _unitToPlace.height);
+                OccupyCells(temp,gridCell);
             }
         }
         private bool CanPlaceBuilding(GridCell startCell, int width, int height)
@@ -67,15 +68,14 @@ namespace _Game_.Scripts.GameBoard.Units
             }
             return true;
         }
-        private void OccupyCells(Unit unit, GridCell startCell, int width, int height)
+        private void OccupyCells(Unit unit, GridCell startCell)
         {
             _unitToPlace = null;
             int startX = startCell.gridX;
             int startY = startCell.gridY;
-
-            for (int i = startX; i < startX + width; i++)
+            for (int i = startX; i < startX + unit.width; i++)
             {
-                for (int j = startY; j < startY + height; j++)
+                for (int j = startY; j < startY + unit.height; j++)
                 {
                     unit.OccupyCell(gridCells[i, j]);
                 }
@@ -101,9 +101,6 @@ namespace _Game_.Scripts.GameBoard.Units
     
         private void HighlightCells(GridCell startCell)
         {
-            if (_unitToPlace == null)
-                return;
-
             ClearHighlightedCells();
 
             int startX = startCell.gridX;

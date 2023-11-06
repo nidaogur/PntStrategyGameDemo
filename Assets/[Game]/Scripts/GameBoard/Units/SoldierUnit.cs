@@ -7,6 +7,7 @@ using _Game_.Scripts.Information;
 using _Game_.Scripts.Manager;
 using _Game_.Scripts.SO;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Game_.Scripts.GameBoard.Units
@@ -19,7 +20,7 @@ namespace _Game_.Scripts.GameBoard.Units
         private readonly WaitForSeconds _moveDuration = new WaitForSeconds(0.1f);
         private readonly WaitForSeconds _attackDuration = new WaitForSeconds(0.3f);
         private Coroutine _attackCoroutine;
-
+        private Unit _currentlyAttackUnit;
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -47,9 +48,7 @@ namespace _Game_.Scripts.GameBoard.Units
         private void MoveToPosition(Vector3 targetPosition)
         {
             if (!IsSelect) return;
-            if (_attackCoroutine != null)
-                StopCoroutine(_attackCoroutine);
-
+            StopAttack();
             _currentCell = GridManager.Instance.GetCellFromPosition(transform.position);
             GridCell targetCell = GridManager.Instance.GetCellFromPosition(targetPosition);
 
@@ -69,7 +68,7 @@ namespace _Game_.Scripts.GameBoard.Units
                 var path = GridManager.Instance.FindPath(_currentCell.position, targetPosition);
                 if (path is { Count: > 0 })
                 {
-                    StartCoroutine(MoveAlongPath(path, () => OccupyCell(_currentCell)));
+                    StartCoroutine(MoveAlongPath(path, (() => OccupyCell(_currentCell))));
                 }
             }
         }
@@ -81,8 +80,8 @@ namespace _Game_.Scripts.GameBoard.Units
             {
                 StartCoroutine(MoveAlongPath(pathToEmpty, () =>
                 {
-                    OccupyCell(_currentCell);
                     AttackTargetAtRay(targetPosition);
+                    OccupyCell(_currentCell);
                 }));
             }
         }
@@ -149,21 +148,34 @@ namespace _Game_.Scripts.GameBoard.Units
         IEnumerator AttackLoop(Unit hitBase)
         {
             float remainingHealth = 0;
+            _currentlyAttackUnit = hitBase;
             do
             {
                 hitBase.UpdateHpBar();
                 AttackAnimation();
                 hitBase.TakeDamage(Damage, out remainingHealth);
                 yield return _attackDuration;
-                hitBase.HpBarEnable(false);
             } while (remainingHealth > 0 && hitBase != null);
+            StopAttack();
         }
 
+        private void StopAttack()
+        {
+            if (_attackCoroutine != null)
+            {
+                StopCoroutine(_attackCoroutine);
+            }
+            if (_currentlyAttackUnit != null)
+            {
+                _currentlyAttackUnit.HpBarEnable(false);
+                _currentlyAttackUnit = null;
+            }
+        }
         public override void OccupyCell(GridCell cell)
         {
+            cell.SetCellStatus(true);
             occupiedCells.Clear();
             occupiedCells.Add(cell);
-            cell.SetCellStatus(true);
         }
 
         public void AttackAnimation()

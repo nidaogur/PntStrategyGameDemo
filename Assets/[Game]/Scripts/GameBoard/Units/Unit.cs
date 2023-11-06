@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using _Game_.Scripts.GameBoard.Grid;
@@ -7,8 +8,10 @@ using _Game_.Scripts.Manager;
 using _Game_.Scripts.SO;
 using _Game_.Scripts.Utilities;
 using TMPro;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
+using Task = System.Threading.Tasks.Task;
 
 namespace _Game_.Scripts.GameBoard.Units
 {
@@ -40,6 +43,7 @@ namespace _Game_.Scripts.GameBoard.Units
 
         protected virtual void Init()
         {
+            occupiedCells.Clear();
             Health=health.value;
             IsDead = false;
             HpBarEnable(false);
@@ -66,12 +70,14 @@ namespace _Game_.Scripts.GameBoard.Units
             cell.SetCellStatus(true);
         }
 
-        public void LeaveCell()
+        private Task LeaveCell()
         {
             for (int i = 0; i < occupiedCells.Count; i++)
             {
                 occupiedCells[i].SetCellStatus(false);
             }
+
+            return Task.CompletedTask;
         }
         public void TakeDamage(float damage,out float health)
         {
@@ -83,11 +89,11 @@ namespace _Game_.Scripts.GameBoard.Units
             }
         }
 
-        public void Death()
+        public async void Death()
         {
             IsDead = true;
+            await LeaveCell();
             GenericObjectPool.Instance.ReleasePooledObject(poolTag,this);
-            LeaveCell();
         }
 
         public void UpdateHpBar()
